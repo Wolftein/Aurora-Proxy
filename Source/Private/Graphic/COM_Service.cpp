@@ -67,7 +67,7 @@ inline namespace COM
 
     HRESULT Graphic_Service::Commit(vbInt32 ID, vbBool Synchronised, vbBool Deferred)
     {
-        if (Deferred)
+        if (VBIsTrue(Deferred))
         {
             mDeferred.emplace_back(Committed { static_cast<UInt32>(ID), VBIsTrue(Synchronised) });
         }
