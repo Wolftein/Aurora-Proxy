@@ -36,7 +36,9 @@ inline namespace COM
 
         HRESULT Prepare([in] vbInt32 ID, [in] Math_Rectf * Viewport, [in] Graphic_Clear Clear, [in] vbInt32 Tint, [in] vbReal32 Depth, [in] vbInt8 Stencil);
 
-        HRESULT Commit([in] vbInt32 ID, [in] vbBool Synchronised);
+        HRESULT Commit([in] vbInt32 ID, [in] vbBool Synchronised, [in, defaultvalue(true)] vbBool Deferred);
+
+        HRESULT Flush();
     };
 
     // -=(Undocumented)=-
@@ -58,6 +60,28 @@ inline namespace COM
         HRESULT Prepare(vbInt32 ID, Math_Rectf * Viewport, Graphic_Clear Clear, vbInt32 Tint, vbReal32 Depth, vbInt8 Stencil) override;
 
         // \see Graphic_Service_::Commit
-        HRESULT Commit(vbInt32 ID, vbBool Synchronised) override;
+        HRESULT Commit(vbInt32 ID, vbBool Synchronised, vbBool Deferred) override;
+
+        // \see Graphic_Service_::Commit
+        HRESULT Flush() override;
+
+    private:
+
+        // -=(Undocumented)=-
+        struct Committed
+        {
+            // -=(Undocumented)=-
+            UInt32 ID;
+
+            // -=(Undocumented)=-
+            Bool   Synchronized;
+        };
+
+    private:
+
+        // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+        Stack<Committed, Graphic::k_MaxDisplays> mDeferred;
     };
 }

@@ -39,6 +39,9 @@ inline namespace COM
         // \see Locator::Open
         Chunk Open(CStr Path) override;
 
+        // \see Locator::Open
+        void Write(CStr Path, CPtr<const UInt08> Data) override;
+
     private:
 
         // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

@@ -65,9 +65,29 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Graphic_Service::Commit(vbInt32 ID, vbBool Synchronised)
+    HRESULT Graphic_Service::Commit(vbInt32 ID, vbBool Synchronised, vbBool Deferred)
     {
-        mWrapper->Commit(ID, VBIsTrue(Synchronised));
+        if (Deferred)
+        {
+            mDeferred.emplace_back(Committed { static_cast<UInt32>(ID), VBIsTrue(Synchronised) });
+        }
+        else
+        {
+            mWrapper->Commit(ID, VBIsTrue(Synchronised));
+        }
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Graphic_Service::Flush()
+    {
+        for (Ref<const Committed> Commitment : mDeferred)
+        {
+            mWrapper->Commit(Commitment.ID, Commitment.Synchronized);
+        }
+        mDeferred.clear();
         return S_OK;
     }
 }
