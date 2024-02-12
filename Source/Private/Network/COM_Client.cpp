@@ -53,4 +53,21 @@ inline namespace COM
         mWrapper->Flush();
         return S_OK;
     }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Network_Client::GetStatistics(Network_Statistics * Result)
+    {
+        Ref<const Network::Statistics> Statistics = mWrapper->GetStatistics();
+
+        Result->Address = VBString8ToString16(Statistics.Address);
+        CPPToVBInt64(Statistics.TotalBytesSent,      Result->TotalBytesSent);
+        CPPToVBInt64(Statistics.TotalBytesReceived,  Result->TotalBytesReceived);
+        CPPToVBInt64(Statistics.TotalBytesPending,   Result->TotalBytesPending);
+        CPPToVBInt64(Statistics.TotalPacketSent,     Result->TotalPacketSent);
+        CPPToVBInt64(Statistics.TotalPacketReceived, Result->TotalPacketReceived);
+
+        return S_OK;
+    }
 }

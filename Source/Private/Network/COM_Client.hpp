@@ -15,6 +15,7 @@
 #include "Core/Serialization/Binary/COM_Reader.hpp"
 #include "Core/Serialization/Binary/COM_Writer.hpp"
 #include "COM_Protocol.hpp"
+#include "COM_Statistics.hpp"
 #include <Network/Client.hpp>
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -34,6 +35,8 @@ inline namespace COM
         HRESULT Write([in] BinaryWriter_ * Message);
 
         HRESULT Flush();
+
+        HRESULT GetStatistics([out] Network_Statistics * Result);
     };
 
     // -=(Undocumented)=-
@@ -53,5 +56,8 @@ inline namespace COM
 
         // \see Network_Client_::Flush
         HRESULT Flush() override;
+
+        // \see Network_Client_::GetStatistics
+        HRESULT GetStatistics(Network_Statistics * Result) override;
     };
 }
