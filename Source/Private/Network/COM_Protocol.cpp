@@ -10,7 +10,8 @@
 // [  HEADER  ]
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-#include "COM_Kernel.hpp"
+#include "COM_Protocol.hpp"
+#include "COM_Client.hpp"
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // [   CODE   ]
@@ -21,125 +22,114 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Kernel::Initialize(Kernel_Properties *Properties)
+    VB6_Network_Protocol::VB6_Network_Protocol()
+        : mOnAttach { 0 },
+          mOnDetach { 0 },
+          mOnRead   { 0 },
+          mOnWrite  { 0 },
+          mOnError  { 0 }
     {
-        Engine::Properties EngineProperties;
+    }
 
-        if (Properties->WindowHandle)
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    void VB6_Network_Protocol::Attach(UInt32 OnAttach, UInt32 OnDetach, UInt32 OnRead, UInt32 OnWrite, UInt32 OnError)
+    {
+        mOnAttach = OnAttach;
+        mOnDetach = OnDetach;
+        mOnRead   = OnRead;
+        mOnWrite  = OnWrite;
+        mOnError  = OnError;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    void VB6_Network_Protocol::OnAttach(ConstSPtr<class Network::Client> Session)
+    {
+        if (mOnAttach)
         {
-            EngineProperties.SetWindowHandle(reinterpret_cast<HWND>(Properties->WindowHandle));
+            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
+
+            ((void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *)) mOnAttach)(& CComClient);
         }
-        if (Properties->WindowTitle)
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    void VB6_Network_Protocol::OnDetach(ConstSPtr<class Network::Client> Session)
+    {
+        if (mOnDetach)
         {
-            EngineProperties.SetWindowTitle(VBString16ToString8(Properties->WindowTitle));
-        }
-        EngineProperties.SetWindowWidth(Properties->WindowWidth);
-        EngineProperties.SetWindowHeight(Properties->WindowHeight);
-        EngineProperties.SetWindowMode(Properties->WindowFullscreen, Properties->WindowBorderless);
+            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
 
-        if (Properties->LogFilename)
+            ((void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *)) mOnDetach)(& CComClient);
+        }
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    void VB6_Network_Protocol::OnError(ConstSPtr<class Network::Client> Session, UInt Error, CStr Description)
+    {
+        if (mOnError)
         {
-            EngineProperties.SetLogFilename(VBString16ToString8(Properties->LogFilename));
+            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
+
+            ((void (STDAPICALLTYPE *)(
+                CComObjectStackEx<Network_Client> *, vbInt32, vbStr16)) mOnRead)(& CComClient, Error, VBString8ToString16(Description));
         }
-
-        mWrapper.Initialize(EngineProperties);
-        return S_OK;
     }
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Kernel::Tick()
+    void VB6_Network_Protocol::OnRead(ConstSPtr<class Network::Client> Session,  CPtr<UInt08> Bytes)
     {
-        mWrapper.Tick();
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Audio(Audio_Service_ * *Result)
-    {
-        (* Result) = CCreate<Audio_Service>(mWrapper.GetSubsystem<Audio::Service>());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Content(Content_Service_ * *Result)
-    {
-        (* Result) = CCreate<Content_Service>(mWrapper.GetSubsystem<Content::Service>());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Display(Window_ ** Result)
-    {
-        (* Result) = CCreate<Window>(mWrapper.GetDisplay());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Graphics(Graphic_Service_ * *Result)
-    {
-        (* Result) = CCreate<Graphic_Service>(mWrapper.GetSubsystem<Graphic::Service>());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Network(Network_Service_ ** Result)
-    {
-        (* Result) = CCreate<Network_Service>(mWrapper.GetSubsystem<Network::Service>());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Platform(Platform_Service_ ** Result)
-    {
-        (* Result) = CCreate<Platform_Service>(mWrapper.GetSubsystem<Platform::Service>());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Renderer(Graphic_Renderer_ ** Result)
-    {
-        (* Result) = CCreate<Graphic_Renderer>(GetOrCreateRenderer());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Kernel::get_Sciter(Sciter_Service_ * *Result)
-    {
-        SPtr<UI::SciterHost> Service = mWrapper.GetSubsystem<UI::SciterHost>();
-
-        if (Service == nullptr && mWrapper.GetDisplay())
+        if (mOnRead)
         {
-            Service = mWrapper.AddSubsystem<UI::SciterHost>();
-            Service->Initialise(mWrapper.GetDisplay(), GetOrCreateRenderer());
-        }
+            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
+            CComObjectStackEx<BinaryReader>   CComReader = CCreateStack<BinaryReader>(Reader(Bytes));
 
-        (* Result) = CCreate<Sciter_Service>(Service);
+            ((void (STDAPICALLTYPE *)(
+                CComObjectStackEx<Network_Client> *,
+                    CComObjectStackEx<BinaryReader> *)) mOnRead)(& CComClient, & CComReader);
+        }
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    void VB6_Network_Protocol::OnWrite(ConstSPtr<class Network::Client> Session, CPtr<UInt08> Bytes)
+    {
+        if (mOnWrite)
+        {
+            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
+            CComObjectStackEx<BinaryReader>   CComReader = CCreateStack<BinaryReader>(Reader(Bytes));
+
+            ((void (STDAPICALLTYPE *)(
+                CComObjectStackEx<Network_Client> *,
+                CComObjectStackEx<BinaryReader> *)) mOnWrite)(& CComClient, & CComReader);
+        }
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Network_Protocol::FinalConstruct()
+    {
+        mWrapper = NewPtr<VB6_Network_Protocol>();
         return S_OK;
     }
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    SPtr<Graphic::Renderer> Kernel::GetOrCreateRenderer()
+    HRESULT Network_Protocol::Attach(vbInt32 OnAttach, vbInt32 OnDetach, vbInt32 OnRead, vbInt32 OnWrite, vbInt32 OnError)
     {
-        return (mRenderer ? mRenderer : mRenderer = NewPtr<Graphic::Renderer>(mWrapper));
+        mWrapper->Attach(OnAttach, OnDetach, OnRead, OnWrite, OnError);
+        return S_OK;
     }
 }

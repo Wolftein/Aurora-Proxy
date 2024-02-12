@@ -20,6 +20,8 @@
 
 #include "Graphic/COM_Renderer.hpp"
 
+#include "Network/COM_Service.hpp"
+
 #include "Platform/COM_Service.hpp"
 
 #include "Platform/COM_Window.hpp"
@@ -68,6 +70,9 @@ inline namespace COM
         HRESULT Graphics([out, retval] Graphic_Service_ ** Result);
 
         [propget]
+        HRESULT Network([out, retval] Network_Service_ ** Result);
+
+        [propget]
         HRESULT Platform([out, retval] Platform_Service_ ** Result);
 
         [propget]
@@ -100,6 +105,9 @@ inline namespace COM
 
         // \see Engine_::get_Graphics
         HRESULT get_Graphics(Graphic_Service_ ** Result);
+
+        // \see Engine_::get_Network
+        HRESULT get_Network(Network_Service_ ** Result);
 
         // \see Engine_::get_Platform
         HRESULT get_Platform(Platform_Service_ ** Result);

@@ -241,6 +241,15 @@ inline namespace Proxy
     }
 
     // -=(Undocumented)=-
+    template<typename Base, typename Wrapper>
+    static CComObjectStackEx<Base> CCreateStack(Wrapper Instance)
+    {
+        CComObjectStackEx<Base> ComInstance;
+        ComInstance.Internal_Reset(Instance);
+        return ComInstance;
+    }
+
+    // -=(Undocumented)=-
     template<typename Base, typename Class>
     static auto CCast(Class Instance)
     {
