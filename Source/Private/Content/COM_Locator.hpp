@@ -13,6 +13,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 #include "Core/Allocator/COM_Chunk.hpp"
+#include "Core/Serialization/Binary/COM_Reader.hpp"
 #include <Content/Locator.hpp>
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -26,6 +27,10 @@ inline namespace COM
     __interface Content_Locator_
     {
         HRESULT Open([in] vbStr16 Path, [out, retval] Memory_Chunk_ ** Result);
+
+        HRESULT Write([in] vbStr16 Path, [in] BinaryReader_ * Data);
+
+        HRESULT Delete([in] vbStr16 Path);
     };
 
     // -=(Undocumented)=-
@@ -39,8 +44,11 @@ inline namespace COM
         // \see Locator::Open
         Chunk Open(CStr Path) override;
 
-        // \see Locator::Open
+        // \see Locator::Write
         void Write(CStr Path, CPtr<const UInt08> Data) override;
+
+        // \see Locator::Delete
+        void Delete(CStr Path) override;
 
     private:
 
