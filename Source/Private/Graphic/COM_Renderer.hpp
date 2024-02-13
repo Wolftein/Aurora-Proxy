@@ -58,7 +58,7 @@ inline namespace COM
     [object, uuid("FB866167-F639-4982-85AC-280255832156"), pointer_default(unique)]
     __interface Graphic_Renderer_
     {
-        HRESULT Begin([in] Graphic_Camera_ * Camera);
+        HRESULT Begin([in] Graphic_Camera_ * Camera, [in] vbReal32 Time);
 
         HRESULT SetParameter([in] vbInt32 Offset, [in] vbReal32 X, [in, defaultvalue(0)] vbReal32 Y, [in, defaultvalue(0)] vbReal32 Z, [in, defaultvalue(0)] vbReal32 W);
 
@@ -103,7 +103,7 @@ inline namespace COM
         HRESULT FinalRelease();
 
         // \see Graphic_Renderer_::Begin
-        HRESULT Begin(Graphic_Camera_ * Camera) override;
+        HRESULT Begin(Graphic_Camera_ * Camera, vbReal32 Time) override;
 
         // \see Graphic_Renderer_::SetParameter
         HRESULT SetParameter(vbInt32 Offset, vbReal32 X, vbReal32 Y, vbReal32 Z, vbReal32 W) override;

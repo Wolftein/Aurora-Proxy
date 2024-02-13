@@ -47,7 +47,8 @@ namespace UI
     void SciterHost::OnTick()
     {
         // Execute Sciter's tick function
-        SciterProcX(WINDOW_HANDLE, SCITER_X_MSG_HEARTBIT(GetSubsystem<Platform::Service>()->GetTime() * 1000));
+        const Real64 Time = GetSubsystem<Platform::Service>()->GetTime();
+        SciterProcX(WINDOW_HANDLE, SCITER_X_MSG_HEARTBIT(Time * 1000));
 
         // Execute Sciter's draw function
         if (mDisplayIsDirty)
@@ -68,7 +69,7 @@ namespace UI
 
             GetSubsystem<Graphic::Service>()->Prepare(mDevice, Viewport, Graphic::Clear::All, 0x00000000, 1.0f, 0);
 
-            mRenderer->Begin(Matrix4f::CreateOrthographic(0.0f, Size.GetX(), Size.GetY(), 0.0f, 1.0f, -1.0f));
+            mRenderer->Begin(Matrix4f::CreateOrthographic(0.0f, Size.GetX(), Size.GetY(), 0.0f, 1.0f, -1.0f), Time);
             {
                 SciterProcX(WINDOW_HANDLE, SciterPaintEvent);
             }
@@ -184,7 +185,7 @@ namespace UI
         const Rectf Source      { 0.0f, 0.0f, 1.0f, 1.0f };
 
         mRenderer->Begin(
-            Matrix4f::CreateOrthographic(0, Size.GetX(), Size.GetY(), 0, 1.0f, -1.0f));
+            Matrix4f::CreateOrthographic(0, Size.GetX(), Size.GetY(), 0, 1.0f, -1.0f), 0.0f);
         mRenderer->DrawTexture(Destination, Source, 0.0f, 0.0f, Graphic::Renderer::Order::Normal, -1, mPipeline, mMaterial);
         mRenderer->End();
     }
