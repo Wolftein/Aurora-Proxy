@@ -21,7 +21,7 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Kernel::Initialize(Kernel_Properties *Properties)
+    HRESULT Kernel::Initialize(Kernel_Mode Mode, Kernel_Properties *Properties)
     {
         Engine::Properties EngineProperties;
 
@@ -42,7 +42,7 @@ inline namespace COM
             EngineProperties.SetLogFilename(VBString16ToString8(Properties->LogFilename));
         }
 
-        mWrapper.Initialize(EngineProperties);
+        mWrapper.Initialize(static_cast<decltype(mWrapper)::Mode>(Mode), EngineProperties);
         return S_OK;
     }
 

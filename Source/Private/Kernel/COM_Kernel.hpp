@@ -37,6 +37,15 @@
 inline namespace COM
 {
     // -=(Undocumented)=-
+    [export, uuid("7236F559-C9F0-11EE-ADEC-1418C3A8EDB8"), v1_enum]
+    typedef enum Kernel_Mode
+    {
+        eKernelModeClient,
+        eKernelModeServer,
+        eKernelModeBoth,
+    } Kernel_Mode;
+
+    // -=(Undocumented)=-
     [export, uuid("5C9EF6AF-F29B-49EB-B72E-D584841F4485")]
     typedef struct Kernel_Properties
     {
@@ -53,7 +62,7 @@ inline namespace COM
     [object, uuid("E8030C3B-EFE0-421B-A794-E4618D6D77FC"), pointer_default(unique)]
     __interface Kernel_
     {
-        HRESULT Initialize([in] Kernel_Properties * Properties);
+        HRESULT Initialize([in] Kernel_Mode Mode, [in] Kernel_Properties * Properties);
 
         HRESULT Tick();
 
@@ -89,7 +98,7 @@ inline namespace COM
     public:
 
         // \see Engine_::Initialize
-        HRESULT Initialize(Kernel_Properties * Properties) override;
+        HRESULT Initialize(Kernel_Mode Mode, Kernel_Properties * Properties) override;
 
         // \see Engine_::Tick
         HRESULT Tick() override;
