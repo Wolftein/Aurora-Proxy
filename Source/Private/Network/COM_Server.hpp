@@ -27,7 +27,7 @@ inline namespace COM
     [object, uuid("70DADE73-C941-11EE-ADEA-1418C3A8EDB8"), pointer_default(unique)]
     __interface Network_Server_
     {
-        HRESULT Attach([in] Network_Protocol_ * Protocol);
+        HRESULT SetProtocol([in] Network_Protocol_ * Protocol);
 
         HRESULT Disconnect([in] vbBool Forcibly);
 
@@ -42,8 +42,8 @@ inline namespace COM
     {
     public:
 
-        // \see Network_Server_::Attach
-        HRESULT Attach(Network_Protocol_ * Protocol) override;
+        // \see Network_Server_::SetProtocol
+        HRESULT SetProtocol(Network_Protocol_ * Protocol) override;
 
         // \see Network_Server_::Disconnect
         HRESULT Disconnect(vbBool Forcibly) override;

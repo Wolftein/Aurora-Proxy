@@ -21,9 +21,27 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Client::Attach(Network_Protocol_ * Protocol)
+    HRESULT Network_Client::SetAttachment(vbInt32 Attachment)
     {
-        mWrapper->Attach(CCast<Network_Protocol>(Protocol));
+        mWrapper->SetAttachment(Attachment);
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Network_Client::GetAttachment(vbInt32 * Result)
+    {
+        (* Result) = mWrapper->GetAttachment();
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Network_Client::SetProtocol(Network_Protocol_ * Protocol)
+    {
+        mWrapper->SetProtocol(CCast<Network_Protocol>(Protocol));
         return S_OK;
     }
 
@@ -39,9 +57,14 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Client::Write(BinaryWriter_ * Message)
+    HRESULT Network_Client::Write(BinaryWriter_ * Message, vbBool Urgent)
     {
         mWrapper->Write<UInt08>(CCast<BinaryWriter>(Message).GetData());
+
+        if (VBIsTrue(Urgent))
+        {
+            mWrapper->Flush();
+        }
         return S_OK;
     }
 

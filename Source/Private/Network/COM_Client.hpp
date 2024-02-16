@@ -28,11 +28,15 @@ inline namespace COM
     [object, uuid("59C3336C-C941-11EE-ADEA-1418C3A8EDB8"), pointer_default(unique)]
     __interface Network_Client_
     {
-        HRESULT Attach([in] Network_Protocol_ * Protocol);
+        HRESULT SetAttachment([in] vbInt32 Attachment);
+
+        HRESULT GetAttachment([out, retval] vbInt32 * Result);
+
+        HRESULT SetProtocol([in] Network_Protocol_ * Protocol);
 
         HRESULT Close([in] vbBool Forcibly);
 
-        HRESULT Write([in] BinaryWriter_ * Message);
+        HRESULT Write([in] BinaryWriter_ * Message, [in, defaultvalue(false)] vbBool Urgent);
 
         HRESULT Flush();
 
@@ -45,14 +49,20 @@ inline namespace COM
     {
     public:
 
-        // \see Network_Client_::Attach
-        HRESULT Attach(Network_Protocol_ * Protocol) override;
+        // \see Network_Client_::SetAttachment
+        HRESULT SetAttachment(vbInt32 Attachment) override;
+
+        // \see Network_Client_::GetAttachment
+        HRESULT GetAttachment(vbInt32 * Result) override;
+
+        // \see Network_Client_::SetProtocol
+        HRESULT SetProtocol(Network_Protocol_ * Protocol) override;
 
         // \see Network_Client_::Close
         HRESULT Close(vbBool Forcibly) override;
 
         // \see Network_Client_::Write
-        HRESULT Write(BinaryWriter_ * Message) override;
+        HRESULT Write(BinaryWriter_ * Message, vbBool Urgent) override;
 
         // \see Network_Client_::Flush
         HRESULT Flush() override;

@@ -21,9 +21,9 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Server::Attach(Network_Protocol_ * Protocol)
+    HRESULT Network_Server::SetProtocol(Network_Protocol_ * Protocol)
     {
-        mWrapper->Attach(CCast<Network_Protocol>(Protocol));
+        mWrapper->SetProtocol(CCast<Network_Protocol>(Protocol));
         return S_OK;
     }
 
