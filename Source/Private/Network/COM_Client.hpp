@@ -36,7 +36,7 @@ inline namespace COM
 
         HRESULT Close([in] vbBool Forcibly);
 
-        HRESULT Write([in] BinaryWriter_ * Message, [in, defaultvalue(false)] vbBool Urgent);
+        HRESULT Write([in] BinaryWriter_ * Message);
 
         HRESULT Flush();
 
@@ -62,7 +62,7 @@ inline namespace COM
         HRESULT Close(vbBool Forcibly) override;
 
         // \see Network_Client_::Write
-        HRESULT Write(BinaryWriter_ * Message, vbBool Urgent) override;
+        HRESULT Write(BinaryWriter_ * Message) override;
 
         // \see Network_Client_::Flush
         HRESULT Flush() override;

@@ -57,14 +57,9 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Client::Write(BinaryWriter_ * Message, vbBool Urgent)
+    HRESULT Network_Client::Write(BinaryWriter_ * Message)
     {
         mWrapper->Write<UInt08>(CCast<BinaryWriter>(Message).GetData());
-
-        if (VBIsTrue(Urgent))
-        {
-            mWrapper->Flush();
-        }
         return S_OK;
     }
 
