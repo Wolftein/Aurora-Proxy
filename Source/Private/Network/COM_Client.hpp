@@ -40,7 +40,7 @@ inline namespace COM
 
         HRESULT Flush();
 
-        HRESULT GetStatistics([out] Network_Statistics * Result);
+        HRESULT GetStatistics([out, retval] Network_Statistics * Result);
     };
 
     // -=(Undocumented)=-
