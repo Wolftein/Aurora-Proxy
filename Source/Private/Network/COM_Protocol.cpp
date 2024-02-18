@@ -48,11 +48,12 @@ inline namespace COM
 
     void VB6_Network_Protocol::OnAttach(ConstSPtr<class Network::Client> Session)
     {
+        using Declaration = void (STDAPICALLTYPE *)(CComObject<Network_Client> *);
+
         if (mOnAttach)
         {
-            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
-
-            ((void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *)) mOnAttach)(& CComClient);
+            CComObject<Network_Client> * CComClient = CCreate<Network_Client>(Session);
+            reinterpret_cast<Declaration>(mOnAttach)(CComClient);
         }
     }
 
@@ -61,11 +62,12 @@ inline namespace COM
 
     void VB6_Network_Protocol::OnDetach(ConstSPtr<class Network::Client> Session)
     {
+        using Declaration = void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *);
+
         if (mOnDetach)
         {
             CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
-
-            ((void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *)) mOnDetach)(& CComClient);
+            reinterpret_cast<Declaration>(mOnDetach)(& CComClient);
         }
     }
 
@@ -74,12 +76,12 @@ inline namespace COM
 
     void VB6_Network_Protocol::OnError(ConstSPtr<class Network::Client> Session, UInt Error, CStr Description)
     {
+        using Declaration = void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *, vbInt32, vbStr16);
+
         if (mOnError)
         {
             CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
-
-            ((void (STDAPICALLTYPE *)(
-                CComObjectStackEx<Network_Client> *, vbInt32, vbStr16)) mOnRead)(& CComClient, Error, VBString8ToString16(Description));
+            reinterpret_cast<Declaration>(mOnError)(& CComClient, Error, VBString8ToString16(Description));
         }
     }
 
@@ -88,14 +90,13 @@ inline namespace COM
 
     void VB6_Network_Protocol::OnRead(ConstSPtr<class Network::Client> Session,  CPtr<UInt08> Bytes)
     {
+        using Declaration = void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *, CComObjectStackEx<BinaryReader> *);
+
         if (mOnRead)
         {
             CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
             CComObjectStackEx<BinaryReader>   CComReader = CCreateStack<BinaryReader>(Reader(Bytes));
-
-            ((void (STDAPICALLTYPE *)(
-                CComObjectStackEx<Network_Client> *,
-                    CComObjectStackEx<BinaryReader> *)) mOnRead)(& CComClient, & CComReader);
+            reinterpret_cast<Declaration>(mOnRead)(& CComClient, & CComReader);
         }
     }
 
@@ -104,14 +105,13 @@ inline namespace COM
 
     void VB6_Network_Protocol::OnWrite(ConstSPtr<class Network::Client> Session, CPtr<UInt08> Bytes)
     {
+        using Declaration = void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *, CComObjectStackEx<BinaryReader> *);
+
         if (mOnWrite)
         {
             CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
             CComObjectStackEx<BinaryReader>   CComReader = CCreateStack<BinaryReader>(Reader(Bytes));
-
-            ((void (STDAPICALLTYPE *)(
-                CComObjectStackEx<Network_Client> *,
-                CComObjectStackEx<BinaryReader> *)) mOnWrite)(& CComClient, & CComReader);
+            reinterpret_cast<Declaration>(mOnWrite)(& CComClient, & CComReader);
         }
     }
 
