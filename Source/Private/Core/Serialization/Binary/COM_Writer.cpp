@@ -158,7 +158,8 @@ inline namespace COM
 
     HRESULT BinaryWriter::WriteString16(vbStr16 Value)
     {
-        mWrapper.WriteString16(reinterpret_cast<Ptr<const Char16>>(Value));
+        CStr16 Data(reinterpret_cast<Ptr<const Char16>>(Value), ::SysStringLen(Value));
+        mWrapper.WriteString16(Data);
         return S_OK;
     }
 

@@ -21,18 +21,18 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Service::Listen(vbInt32 Capacity, vbStr8 Address, vbStr8 Service, Network_Server_ ** Result)
+    HRESULT Network_Service::Listen(vbStr8 Address, vbInt32 Port, Network_Server_ ** Result)
     {
-        (* Result) = CCreate<Network_Server>(mWrapper->Listen(Capacity, Address, Service));
+        (* Result) = CCreate<Network_Server>(mWrapper->Listen(Address, Port));
         return S_OK;
     }
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Service::Connect(vbStr8 Address, vbStr8 Service, Network_Client_ ** Result)
+    HRESULT Network_Service::Connect(vbStr8 Address, vbInt32 Port, Network_Client_ ** Result)
     {
-        (* Result) = CCreate<Network_Client>(mWrapper->Connect(Address, Service));
+        (* Result) = CCreate<Network_Client>(mWrapper->Connect(Address, Port));
         return S_OK;
     }
 }
