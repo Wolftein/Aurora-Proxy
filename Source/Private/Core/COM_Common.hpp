@@ -178,7 +178,7 @@ inline namespace Proxy
         }
 
         // -=(Undocumented)=-
-        auto Internal_Get()
+        Ref<T> Internal_Get()
         {
             return mWrapper;
         }
@@ -251,7 +251,7 @@ inline namespace Proxy
 
     // -=(Undocumented)=-
     template<typename Base, typename Class>
-    static auto CCast(Class Instance)
+    static auto & CCast(Class Instance)
     {
         return reinterpret_cast<Ptr<Base>>(Instance)->Internal_Get();
     }
