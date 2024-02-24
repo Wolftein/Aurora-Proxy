@@ -126,7 +126,7 @@ inline namespace Proxy
     inline auto VBString16ToString16(vbStr16 Value)
     {
         const auto Length = SysStringLen(Value);
-        return CStr16(reinterpret_cast<Ptr<const char16_t>>(Value), Length);
+        return CStr16(reinterpret_cast<Ptr<const Char16>>(Value), Length);
     }
 
     // -=(Undocumented)=-

@@ -77,7 +77,7 @@ inline namespace COM
 
     HRESULT BinaryReader::Read(vbAny Address, vbInt32 Length)
     {
-        FastCopyMemory(mWrapper.Read<Ptr<UInt08>>(Length), Address, Length);
+        FastCopyMemory(Address, mWrapper.Read<Ptr<UInt08>>(Length), Length);
         return S_OK;
     }
 
