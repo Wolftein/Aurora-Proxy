@@ -12,7 +12,7 @@
 // [  HEADER  ]
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-#include "Core/COM_Common.hpp"
+#include "Core/Serialization/Binary/COM_Reader.hpp"
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // [   CODE   ]
@@ -33,9 +33,13 @@ inline namespace COM
 
         HRESULT GetData([in, satype(vbInt8)] SAFEARRAY ** Result);
 
+        HRESULT HasData([out, retval] vbBool * Result);
+
         HRESULT GetText([out, retval] vbStr16 * Result);
 
         HRESULT GetSize([out, retval] vbInt32 * Result);
+
+        HRESULT GetReader([out, retval] BinaryReader_ ** Result);
     };
 
     // -=(Undocumented)=-
@@ -56,10 +60,16 @@ inline namespace COM
         // \see Memory_Chunk_::GetData
         HRESULT GetData(SAFEARRAY ** Result) override;
 
+        // \see Memory_Chunk_::GetData
+        HRESULT HasData(vbBool * Result);
+
         // \see Memory_Chunk_::GetText
         HRESULT GetText(vbStr16 * Result) override;
 
         // \see Memory_Chunk_::GetSize
         HRESULT GetSize(vbInt32 * Result) override;
+
+        // \see Memory_Chunk_::GetReader
+        HRESULT GetReader(BinaryReader_ ** Result);
     };
 }

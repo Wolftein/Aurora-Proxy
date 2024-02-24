@@ -70,6 +70,15 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+    HRESULT Memory_Chunk::HasData(vbBool * Result)
+    {
+        (* Result) = mWrapper.HasData() ? VBTrue : VBFalse;
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
     HRESULT Memory_Chunk::GetText(vbStr16 * Result)
     {
         (* Result) = VBString8ToString16(mWrapper.GetText());
@@ -82,6 +91,15 @@ inline namespace COM
     HRESULT Memory_Chunk::GetSize(vbInt32 * Result)
     {
         (* Result) = mWrapper.GetSize();
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Memory_Chunk::GetReader(BinaryReader_ ** Result)
+    {
+        (* Result) =  CCreate<BinaryReader>(Reader(mWrapper.GetSpan<UInt08>()));
         return S_OK;
     }
 }
