@@ -41,8 +41,8 @@ inline namespace COM
         // -=(Undocumented)=-
         Visual_Basic_Content_Locator(CComPtr<IUnknown> Locator);
 
-        // \see Locator::Open
-        Chunk Open(CStr Path) override;
+        // \see Locator::Read
+        Chunk Read(CStr Path) override;
 
         // \see Locator::Write
         void Write(CStr Path, CPtr<const UInt08> Data) override;

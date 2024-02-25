@@ -61,7 +61,7 @@ inline namespace COM
         HRESULT GetData(SAFEARRAY ** Result) override;
 
         // \see Memory_Chunk_::GetData
-        HRESULT HasData(vbBool * Result);
+        HRESULT HasData(vbBool * Result) override;
 
         // \see Memory_Chunk_::GetText
         HRESULT GetText(vbStr16 * Result) override;
@@ -70,6 +70,6 @@ inline namespace COM
         HRESULT GetSize(vbInt32 * Result) override;
 
         // \see Memory_Chunk_::GetReader
-        HRESULT GetReader(BinaryReader_ ** Result);
+        HRESULT GetReader(BinaryReader_ ** Result) override;
     };
 }

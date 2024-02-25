@@ -29,7 +29,7 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    Chunk Visual_Basic_Content_Locator::Open(CStr Path)
+    Chunk Visual_Basic_Content_Locator::Read(CStr Path)
     {
         Ptr<Content_Locator_> Implementation;
 
