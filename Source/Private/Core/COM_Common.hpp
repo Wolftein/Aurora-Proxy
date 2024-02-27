@@ -231,13 +231,17 @@ inline namespace Proxy
 
     // -=(Undocumented)=-
     template<typename Base, typename Wrapper>
-    static auto CCreate(Wrapper Instance)
+    static CComPtr<Base> CCreate(Wrapper Instance, Bool AddRef = true)
     {
         CComObject<Base> * ComInstance;
         CComObject<Base>::CreateInstance(& ComInstance);
         ComInstance->Internal_Reset(Instance);
-        ComInstance->AddRef();
-        return ComInstance;
+
+        if (AddRef)
+        {
+            ComInstance->AddRef();
+        }
+        return CComPtr<Base>(ComInstance);
     }
 
     // -=(Undocumented)=-

@@ -48,11 +48,11 @@ inline namespace COM
 
     void VB6_Network_Protocol::OnAttach(ConstSPtr<class Network::Client> Session)
     {
-        using Declaration = void (STDAPICALLTYPE *)(CComObject<Network_Client> *);
+        using Declaration = void (STDAPICALLTYPE *)(Network_Client *);
 
         if (mOnAttach)
         {
-            CComObject<Network_Client> * CComClient = CCreate<Network_Client>(Session);
+            CComPtr<Network_Client> CComClient(CCreate<Network_Client>(Session, false));
             reinterpret_cast<Declaration>(mOnAttach)(CComClient);
         }
     }
