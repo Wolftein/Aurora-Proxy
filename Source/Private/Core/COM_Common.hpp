@@ -255,7 +255,14 @@ inline namespace Proxy
 
     // -=(Undocumented)=-
     template<typename Base, typename Class>
-    static auto & CCast(Class Instance)
+    static auto CCast(Class Instance)
+    {
+        return reinterpret_cast<Ptr<Base>>(Instance)->Internal_Get();
+    }
+
+    // -=(Undocumented)=-
+    template<typename Base, typename Class>
+    static auto & CCastObject(Class Instance)
     {
         return reinterpret_cast<Ptr<Base>>(Instance)->Internal_Get();
     }

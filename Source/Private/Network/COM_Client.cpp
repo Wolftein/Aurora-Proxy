@@ -59,7 +59,7 @@ inline namespace COM
 
     HRESULT Network_Client::Write(BinaryWriter_ * Message)
     {
-        CPtr<const UInt08> Data = CCast<BinaryWriter>(Message).GetData();
+        CPtr<const UInt08> Data = CCastObject<BinaryWriter>(Message).GetData();
         mWrapper->Write(Data);
         return S_OK;
     }
