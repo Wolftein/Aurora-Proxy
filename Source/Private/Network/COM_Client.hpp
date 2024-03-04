@@ -25,6 +25,15 @@
 inline namespace COM
 {
     // -=(Undocumented)=-
+    [export, uuid("50585AA2-0027-41A8-9D94-963E499D255F"), v1_enum]
+    typedef enum Network_Channel
+    {
+        eChannelReliable,
+        eChannelUnreliable,
+        eChannelUnsequenced,
+    } Network_Channel;
+
+    // -=(Undocumented)=-
     [object, uuid("59C3336C-C941-11EE-ADEA-1418C3A8EDB8"), pointer_default(unique)]
     __interface Network_Client_
     {
@@ -34,9 +43,13 @@ inline namespace COM
 
         HRESULT SetProtocol([in] Network_Protocol_ * Protocol);
 
+        HRESULT Poll();
+
+        HRESULT Flush();
+
         HRESULT Close([in] vbBool Forcibly);
 
-        HRESULT Write([in] BinaryWriter_ * Message, [in] vbInt32 Channel, [in] vbBool Reliable);
+        HRESULT Write([in] BinaryWriter_ * Message, [in] Network_Channel Mode);
 
         HRESULT GetStatistics([out, retval] Network_Statistics * Result);
     };
@@ -56,11 +69,17 @@ inline namespace COM
         // \see Network_Client_::SetProtocol
         HRESULT SetProtocol(Network_Protocol_ * Protocol) override;
 
+        // \see Network_Client_::Poll
+        HRESULT Poll();
+
+        // \see Network_Client_::Flush
+        HRESULT Flush();
+
         // \see Network_Client_::Close
         HRESULT Close(vbBool Forcibly) override;
 
         // \see Network_Client_::Write
-        HRESULT Write(BinaryWriter_ * Message, vbInt32 Channel, vbBool Reliable) override;
+        HRESULT Write(BinaryWriter_ * Message, Network_Channel Mode) override;
 
         // \see Network_Client_::GetStatistics
         HRESULT GetStatistics(Network_Statistics * Result) override;
