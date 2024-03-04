@@ -32,8 +32,6 @@ inline namespace COM
         HRESULT Disconnect([in] vbBool Forcibly);
 
         HRESULT Broadcast([in] BinaryWriter_ * Message);
-
-        HRESULT Flush();
     };
 
     // -=(Undocumented)=-
@@ -50,8 +48,5 @@ inline namespace COM
 
         // \see Network_Server_::Broadcast
         HRESULT Broadcast(BinaryWriter_ * Message) override;
-
-        // \see Network_Server_::Flush
-        HRESULT Flush() override;
     };
 }

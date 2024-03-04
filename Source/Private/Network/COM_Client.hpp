@@ -36,9 +36,7 @@ inline namespace COM
 
         HRESULT Close([in] vbBool Forcibly);
 
-        HRESULT Write([in] BinaryWriter_ * Message);
-
-        HRESULT Flush();
+        HRESULT Write([in] BinaryWriter_ * Message, [in] vbInt32 Channel, [in] vbBool Reliable);
 
         HRESULT GetStatistics([out, retval] Network_Statistics * Result);
     };
@@ -62,10 +60,7 @@ inline namespace COM
         HRESULT Close(vbBool Forcibly) override;
 
         // \see Network_Client_::Write
-        HRESULT Write(BinaryWriter_ * Message) override;
-
-        // \see Network_Client_::Flush
-        HRESULT Flush() override;
+        HRESULT Write(BinaryWriter_ * Message, vbInt32 Channel, vbBool Reliable) override;
 
         // \see Network_Client_::GetStatistics
         HRESULT GetStatistics(Network_Statistics * Result) override;

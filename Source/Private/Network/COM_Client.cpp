@@ -57,19 +57,10 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Client::Write(BinaryWriter_ * Message)
+    HRESULT Network_Client::Write(BinaryWriter_ * Message, vbInt32 Channel, vbBool Reliable)
     {
         CPtr<const UInt08> Data = CCastObject<BinaryWriter>(Message).GetData();
-        mWrapper->Write(Data);
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Network_Client::Flush()
-    {
-        mWrapper->Flush();
+        mWrapper->Write(Data, Channel, VBIsTrue(Reliable));
         return S_OK;
     }
 
@@ -81,9 +72,11 @@ inline namespace COM
         Ref<const Network::Statistics> Statistics = mWrapper->GetStatistics();
 
         Result->Address = VBString8ToString16(Statistics.Address);
+        Result->Port    = Statistics.Port;
+        Result->Latency = Statistics.Latency;
         CPPToVBInt64(Statistics.TotalBytesSent,      Result->TotalBytesSent);
         CPPToVBInt64(Statistics.TotalBytesReceived,  Result->TotalBytesReceived);
-        CPPToVBInt64(Statistics.TotalBytesPending,   Result->TotalBytesPending);
+        CPPToVBInt64(Statistics.TotalPacketLost,     Result->TotalPacketLost);
         CPPToVBInt64(Statistics.TotalPacketSent,     Result->TotalPacketSent);
         CPPToVBInt64(Statistics.TotalPacketReceived, Result->TotalPacketReceived);
 

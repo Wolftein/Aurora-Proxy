@@ -25,9 +25,11 @@ inline namespace COM
     typedef struct Network_Statistics
     {
         vbStr16 Address;
+        vbInt32 Port;
+        vbInt32 Latency;
         vbInt64 TotalBytesSent;
         vbInt64 TotalBytesReceived;
-        vbInt64 TotalBytesPending;
+        vbInt64 TotalPacketLost;
         vbInt64 TotalPacketSent;
         vbInt64 TotalPacketReceived;
     } Network_Statistics;

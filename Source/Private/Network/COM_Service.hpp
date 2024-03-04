@@ -26,9 +26,9 @@ inline namespace COM
     [object, uuid("12E95A24-C94A-11EE-ADEA-1418C3A8EDB8"), pointer_default(unique)]
     __interface Network_Service_
     {
-        HRESULT Listen([in] vbStr8 Address, [in] vbInt32 Port, [out, retval] Network_Server_ ** Result);
+        HRESULT Listen([in] vbStr8 Address, [in] vbInt32 Port, [in] vbInt32 Capacity, [in] vbInt32 InBandwidth, [in] vbInt32 OutBandwidth, [out, retval] Network_Server_ ** Result);
 
-        HRESULT Connect([in] vbStr8 Address, [in] vbInt32 Port, [out, retval] Network_Client_ ** Result);
+        HRESULT Connect([in] vbStr8 Address, [in] vbInt32 Port, [in] vbInt32 InBandwidth, [in] vbInt32 OutBandwidth, [out, retval] Network_Client_ ** Result);
     };
 
     // -=(Undocumented)=-
@@ -38,9 +38,9 @@ inline namespace COM
     public:
 
         // \see Network_Service_::Listen
-        HRESULT Listen(vbStr8 Address, vbInt32 Port, Network_Server_ ** Result) override;
+        HRESULT Listen(vbStr8 Address, vbInt32 Port, vbInt32 Capacity, vbInt32 InBandwidth, vbInt32 OutBandwidth, Network_Server_ ** Result) override;
 
         // \see Network_Service_::Connect
-        HRESULT Connect(vbStr8 Address, vbInt32 Port, Network_Client_ ** Result) override;
+        HRESULT Connect(vbStr8 Address, vbInt32 Port, vbInt32 InBandwidth, vbInt32 OutBandwidth, Network_Client_ ** Result) override;
     };
 }

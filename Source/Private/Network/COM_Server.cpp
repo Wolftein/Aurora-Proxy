@@ -41,16 +41,7 @@ inline namespace COM
 
     HRESULT Network_Server::Broadcast(BinaryWriter_ * Message)
     {
-        mWrapper->Broadcast<UInt08>(CCastObject<BinaryWriter>(Message).GetData());
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Network_Server::Flush()
-    {
-        mWrapper->Flush();
+        //mWrapper->Broadcast<UInt08>(CCastObject<BinaryWriter>(Message).GetData());
         return S_OK;
     }
 }
