@@ -31,7 +31,7 @@ inline namespace COM
 
         HRESULT Disconnect([in] vbBool Forcibly);
 
-        HRESULT Broadcast([in] BinaryWriter_ * Message);
+        HRESULT Broadcast([in] BinaryWriter_ * Message, [in] vbInt32 Channel, [in] vbBool Reliable);
     };
 
     // -=(Undocumented)=-
@@ -47,6 +47,6 @@ inline namespace COM
         HRESULT Disconnect(vbBool Forcibly) override;
 
         // \see Network_Server_::Broadcast
-        HRESULT Broadcast(BinaryWriter_ * Message) override;
+        HRESULT Broadcast(BinaryWriter_ * Message, vbInt32 Channel, vbBool Reliable) override;
     };
 }

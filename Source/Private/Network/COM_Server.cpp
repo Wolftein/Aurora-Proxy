@@ -39,9 +39,9 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Server::Broadcast(BinaryWriter_ * Message)
+    HRESULT Network_Server::Broadcast(BinaryWriter_ * Message, vbInt32 Channel, vbBool Reliable)
     {
-        //mWrapper->Broadcast<UInt08>(CCastObject<BinaryWriter>(Message).GetData());
+        mWrapper->Broadcast<UInt08>(CCastObject<BinaryWriter>(Message).GetData(), Channel, VBIsTrue(Reliable));
         return S_OK;
     }
 }
