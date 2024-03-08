@@ -49,7 +49,7 @@ inline namespace COM
 
         HRESULT Close([in] vbBool Forcibly);
 
-        HRESULT Write([in] BinaryWriter_ * Message, [in, defaultvalue(eChannelReliable)] Network_Channel Mode);
+        HRESULT Write([in] BinaryWriter_ * Message, [in, defaultvalue(0)] Network_Channel Mode);
 
         HRESULT GetStatistics([out, retval] Network_Statistics * Result);
     };
