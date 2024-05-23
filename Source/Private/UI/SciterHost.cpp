@@ -44,11 +44,10 @@ namespace UI
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    void SciterHost::OnTick()
+    void SciterHost::OnTick(Real64 Tick)
     {
         // Execute Sciter's tick function
-        const Real64 Time = GetSubsystem<Platform::Service>()->GetTime();
-        SciterProcX(WINDOW_HANDLE, SCITER_X_MSG_HEARTBIT(Time * 1000));
+        SciterProcX(WINDOW_HANDLE, SCITER_X_MSG_HEARTBIT(Tick * 1000));
 
         // Execute Sciter's draw function
         if (mDisplayIsDirty)
@@ -69,7 +68,7 @@ namespace UI
 
             GetSubsystem<Graphic::Service>()->Prepare(mDevice, Viewport, Graphic::Clear::All, 0x00000000, 1.0f, 0);
 
-            mRenderer->Begin(Matrix4f::CreateOrthographic(0.0f, Size.GetX(), Size.GetY(), 0.0f, 1.0f, -1.0f), Time);
+            mRenderer->Begin(Matrix4f::CreateOrthographic(0.0f, Size.GetX(), Size.GetY(), 0.0f, 1.0f, -1.0f), Tick);
             {
                 SciterProcX(WINDOW_HANDLE, SciterPaintEvent);
             }

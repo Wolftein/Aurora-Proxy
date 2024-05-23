@@ -21,9 +21,9 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Service::Listen(vbStr8 Address, vbInt32 Port, Network_Server_ ** Result)
+    HRESULT Network_Service::Listen(vbStr8 Address, vbInt32 Port, vbInt32 Capacity, Network_Server_ ** Result)
     {
-        (* Result) = CCreate<Network_Server>(mWrapper->Listen(Address, Port));
+        (* Result) = CCreate<Network_Server>(mWrapper->Listen(Address, Port, Capacity));
         return S_OK;
     }
 

@@ -26,27 +26,25 @@ inline namespace COM
         : mOnAttach { 0 },
           mOnDetach { 0 },
           mOnRead   { 0 },
-          mOnWrite  { 0 },
-          mOnError  { 0 }
+          mOnWrite  { 0 }
     {
     }
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    void VB6_Network_Protocol::Attach(UInt32 OnAttach, UInt32 OnDetach, UInt32 OnRead, UInt32 OnWrite, UInt32 OnError)
+    void VB6_Network_Protocol::Attach(UInt32 OnAttach, UInt32 OnDetach, UInt32 OnRead, UInt32 OnWrite)
     {
         mOnAttach = OnAttach;
         mOnDetach = OnDetach;
         mOnRead   = OnRead;
         mOnWrite  = OnWrite;
-        mOnError  = OnError;
     }
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    void VB6_Network_Protocol::OnAttach(ConstSPtr<class Network::Client> Session)
+    void VB6_Network_Protocol::OnConnect(ConstSPtr<class Network::Client> Session)
     {
         using Declaration = void (STDAPICALLTYPE *)(Network_Client *);
 
@@ -60,7 +58,7 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    void VB6_Network_Protocol::OnDetach(ConstSPtr<class Network::Client> Session)
+    void VB6_Network_Protocol::OnDisconnect(ConstSPtr<class Network::Client> Session)
     {
         using Declaration = void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *);
 
@@ -68,20 +66,6 @@ inline namespace COM
         {
             CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
             reinterpret_cast<Declaration>(mOnDetach)(& CComClient);
-        }
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    void VB6_Network_Protocol::OnError(ConstSPtr<class Network::Client> Session, UInt Error, CStr Description)
-    {
-        using Declaration = void (STDAPICALLTYPE *)(CComObjectStackEx<Network_Client> *, vbInt32, vbStr16);
-
-        if (mOnError)
-        {
-            CComObjectStackEx<Network_Client> CComClient = CCreateStack<Network_Client>(Session);
-            reinterpret_cast<Declaration>(mOnError)(& CComClient, Error, VBString8ToString16(Description));
         }
     }
 
@@ -127,9 +111,9 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Protocol::Attach(vbInt32 OnAttach, vbInt32 OnDetach, vbInt32 OnRead, vbInt32 OnWrite, vbInt32 OnError)
+    HRESULT Network_Protocol::Attach(vbInt32 OnAttach, vbInt32 OnDetach, vbInt32 OnRead, vbInt32 OnWrite)
     {
-        mWrapper->Attach(OnAttach, OnDetach, OnRead, OnWrite, OnError);
+        mWrapper->Attach(OnAttach, OnDetach, OnRead, OnWrite);
         return S_OK;
     }
 }

@@ -45,7 +45,7 @@ namespace UI
         ~SciterHost();
 
         // \see Subsystem::OnTick
-        void OnTick() override;
+        void OnTick(Real64 Tick) override;
 
         // -=(Undocumented)=-
         Bool Initialise(ConstSPtr<Platform::Window> Window, ConstSPtr<Graphic::Renderer> Renderer);

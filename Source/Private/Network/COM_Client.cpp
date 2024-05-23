@@ -21,6 +21,15 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+    HRESULT Network_Client::SetProtocol(Network_Protocol_ * Protocol)
+    {
+        mWrapper->SetProtocol(CCast<Network_Protocol>(Protocol));
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
     HRESULT Network_Client::SetAttachment(vbInt32 Attachment)
     {
         mWrapper->SetAttachment(Attachment);
@@ -39,9 +48,30 @@ inline namespace COM
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    HRESULT Network_Client::SetProtocol(Network_Protocol_ * Protocol)
+    HRESULT Network_Client::Append(BinaryWriter_ * Message)
     {
-        mWrapper->SetProtocol(CCast<Network_Protocol>(Protocol));
+        CPtr<const UInt08> Data = CCastObject<BinaryWriter>(Message).GetData();
+        mWrapper->Append(Data);
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Network_Client::Flush(Network_Channel Mode)
+    {
+        mWrapper->Flush(static_cast<Network::Channel>(Mode));
+        return S_OK;
+    }
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    HRESULT Network_Client::Write(BinaryWriter_ * Message, Network_Channel Mode)
+    {
+        CPtr<const UInt08> Data = CCastObject<BinaryWriter>(Message).GetData();
+        mWrapper->Append(Data);
+        mWrapper->Flush(static_cast<Network::Channel>(Mode));
         return S_OK;
     }
 
@@ -51,42 +81,6 @@ inline namespace COM
     HRESULT Network_Client::Close(vbBool Forcibly)
     {
         mWrapper->Close(VBIsTrue(Forcibly));
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Network_Client::Write(BinaryWriter_ * Message)
-    {
-        CPtr<const UInt08> Data = CCastObject<BinaryWriter>(Message).GetData();
-        mWrapper->Write(Data);
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Network_Client::Flush()
-    {
-        mWrapper->Flush();
-        return S_OK;
-    }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-    HRESULT Network_Client::GetStatistics(Network_Statistics * Result)
-    {
-        Ref<const Network::Statistics> Statistics = mWrapper->GetStatistics();
-
-        Result->Address = VBString8ToString16(Statistics.Address);
-        CPPToVBInt64(Statistics.TotalBytesSent,      Result->TotalBytesSent);
-        CPPToVBInt64(Statistics.TotalBytesReceived,  Result->TotalBytesReceived);
-        CPPToVBInt64(Statistics.TotalBytesPending,   Result->TotalBytesPending);
-        CPPToVBInt64(Statistics.TotalPacketSent,     Result->TotalPacketSent);
-        CPPToVBInt64(Statistics.TotalPacketReceived, Result->TotalPacketReceived);
-
         return S_OK;
     }
 }

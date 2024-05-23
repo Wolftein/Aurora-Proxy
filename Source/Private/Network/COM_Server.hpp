@@ -28,12 +28,6 @@ inline namespace COM
     __interface Network_Server_
     {
         HRESULT SetProtocol([in] Network_Protocol_ * Protocol);
-
-        HRESULT Disconnect([in] vbBool Forcibly);
-
-        HRESULT Broadcast([in] BinaryWriter_ * Message);
-
-        HRESULT Flush();
     };
 
     // -=(Undocumented)=-
@@ -44,14 +38,5 @@ inline namespace COM
 
         // \see Network_Server_::SetProtocol
         HRESULT SetProtocol(Network_Protocol_ * Protocol) override;
-
-        // \see Network_Server_::Disconnect
-        HRESULT Disconnect(vbBool Forcibly) override;
-
-        // \see Network_Server_::Broadcast
-        HRESULT Broadcast(BinaryWriter_ * Message) override;
-
-        // \see Network_Server_::Flush
-        HRESULT Flush() override;
     };
 }
